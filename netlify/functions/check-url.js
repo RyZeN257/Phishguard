@@ -23,6 +23,18 @@ exports.handler = async (event) => {
   const API_KEY = process.env.GOOGLE_SAFE_BROWSING_KEY;
 
   try {
+    // Valider l'URL
+    if (!url || typeof url !== 'string') {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: "URL invalide", isSafe: null })
+      };
+    }
+
+    // Ajouter http:// si manquant
+    const fullUrl = url.startsWith('http') ? url : `https://${url}`;
+
     const response = await axios.post(
       `https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${API_KEY}`,
       {
@@ -31,7 +43,7 @@ exports.handler = async (event) => {
           threatTypes: ["MALWARE", "SOCIAL_ENGINEERING", "UNWANTED_SOFTWARE"],
           platformTypes: ["ANY_PLATFORM"],
           threatEntryTypes: ["URL"],
-          threatEntries: [{ url: url }]
+          threatEntries: [{ url: fullUrl }]
         }
       }
     );
@@ -42,13 +54,21 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ isSafe: isSafe })
+      body: JSON.stringify({ 
+        isSafe: isSafe,
+        matches: response.data.matches || null,
+        debug: { url: fullUrl }
+      })
     };
   } catch (error) {
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: "Erreur de communication avec Google" })
+      body: JSON.stringify({ 
+        error: error.response?.data?.error?.message || "Erreur de communication avec Google",
+        details: error.message,
+        isSafe: null
+      })
     };
   }
 };

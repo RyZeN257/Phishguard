@@ -924,13 +924,20 @@ async function verifierURL() {
 
     const data = await response.json();
 
-    if (data.isSafe) {
+    console.log('API Response:', data);
+
+    if (data.error) {
+      resDiv.innerHTML = `<span style='color: #ef4444;'>[!] ERREUR: ${data.error}</span><br><span style='font-size:0.8rem;color:#9ca3af;'>${data.details || ''}</span>`;
+    } else if (data.isSafe === null) {
+      resDiv.innerHTML = "<span style='color: #ef4444;'>[!] ERREUR : Requête invalide</span>";
+    } else if (data.isSafe) {
       resDiv.innerHTML = "<span style='color: #10b981;'>[PASS] SITE SÛR - AUCUNE MENACE</span>";
     } else {
-      resDiv.innerHTML = "<span style='color: #ef4444;'>[DANGER] ALERTE PHISHING DÉTECTÉE !</span>";
+      resDiv.innerHTML = `<span style='color: #ef4444;'>[DANGER] ALERTE PHISHING DÉTECTÉE !</span>`;
     }
   } catch (error) {
-    resDiv.innerHTML = "<span style='color: #ef4444;'>[!] ERREUR : SERVEUR OFFLINE (LANCE NODE SERVER.JS)</span>";
+    console.error('Fetch error:', error);
+    resDiv.innerHTML = "<span style='color: #ef4444;'>[!] ERREUR DE CONNEXION</span>";
   }
 }
 </script>
