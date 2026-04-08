@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>PhishGuard — Your Digital Shield</title>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet"/>
-<style>
+<script type="text/javascript" src="https://me.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=ENFyuyShuDtc1jRWL3489zSzg2JDDCUWIx5Hdjr57siOVsGup_iJGwsC_q5mmFMBnZFTdHXV4-yLEFicF0SRtt5YjdWy6WKDOsYqBeO6qV-tVU4rbj7TcvnAedzpyZplDqof5NHVH2p4hx26nJL2pDE32jXfX2rijoJQ6oKEd4cG6iv4Yev8RC3xCtRcWhlCGFpZ8aVFtef-JpmIzySTlI81dfuF0WjuhFq23_foL4pCjLgzDC0UuV4L4xKfYcv4J9cEzzKN_fs10MeUzeg7qmTamRB0JjbUFHExFaHK72fEajvVOTmAqPImOFSPOQkw" charset="UTF-8"></script><style>
   :root {
     --violet: #a855f7;
     --violet-dark: #7c3aed;
@@ -915,8 +915,8 @@ async function verifierURL() {
   resDiv.innerHTML = "<span style='color: #a855f7;'>ANALYSE EN COURS...</span>";
 
   try {
-    // ON CHANGE L'ADRESSE ICI POUR NETLIFY
-    const response = await fetch('/.netlify/functions/check-url', { 
+    // Connexion à la fonction Netlify
+    const response = await fetch('/.netlify/functions/check-url', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url: urlAVerifier })
@@ -930,8 +930,7 @@ async function verifierURL() {
       resDiv.innerHTML = "<span style='color: #ef4444;'>[DANGER] ALERTE PHISHING DÉTECTÉE !</span>";
     }
   } catch (error) {
-    resDiv.innerHTML = "<span style='color: #ef4444;'>[!] ERREUR DE CONNEXION AU SCANNER</span>";
-    console.error(error);
+    resDiv.innerHTML = "<span style='color: #ef4444;'>[!] ERREUR : SERVEUR OFFLINE (LANCE NODE SERVER.JS)</span>";
   }
 }
 </script>

@@ -1,0 +1,20 @@
+[build]
+  command = "echo 'No build required'"
+  functions = "netlify/functions"
+  publish = "."
+
+[context.production]
+  environment = { GOOGLE_SAFE_BROWSING_KEY = "@google_safe_browsing_key" }
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[redirects]]
+  from = "/*"
+  to = "/Index.html"
+  status = 200

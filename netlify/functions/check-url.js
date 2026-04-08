@@ -1,9 +1,22 @@
 const axios = require('axios');
 
 exports.handler = async (event) => {
-  // On vérifie que c'est bien une requête POST
+  // CORS headers
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Content-Type': 'application/json'
+  };
+
+  // Handle preflight
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
+
+  // Vérifier que c'est bien une requête POST
   if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "Method Not Allowed" };
+    return { statusCode: 405, headers, body: JSON.stringify({ error: "Method Not Allowed" }) };
   }
 
   const { url } = JSON.parse(event.body);
@@ -28,11 +41,13 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
+      headers,
       body: JSON.stringify({ isSafe: isSafe })
     };
   } catch (error) {
     return {
       statusCode: 500,
+      headers,
       body: JSON.stringify({ error: "Erreur de communication avec Google" })
     };
   }
